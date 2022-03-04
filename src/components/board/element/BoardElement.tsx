@@ -1,11 +1,24 @@
 import React from "react";
 import "./boardElement.css"
 
-const BoardElement:({listID, color}: { listID: string, color: string }) => JSX.Element
-    = ({listID, color} : {listID : string, color: string}) => {
+interface BoardProps {
+    coordinate: number[]
+    isPath: (x : number, y: number) => boolean
+    isFound: (x : number, y: number) => number
+}
+
+
+const BoardElement:React.FC<BoardProps> = ({coordinate, isPath, isFound}) => {
     return (
-        <div className={`board-element ${color}`}/>
+        <div className={`board-element ${findColor(isPath(coordinate[0], coordinate[1])
+            , isFound(coordinate[0], coordinate[1]))}`}/>
     )
+}
+
+const findColor = (isPath: boolean, isFound: number): string => {
+    if (isPath) return "red"
+    if (isFound === 0) return "white"
+    return "blue"
 }
 
 export default BoardElement

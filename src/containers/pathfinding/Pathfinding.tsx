@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import Board from "../../components/board/Board";
 import Management from "../../components/management/Management";
@@ -8,25 +8,24 @@ Pathfinding.propTypes = {
     pathfinding: PropTypes.string
 };
 
+
+
 function Pathfinding() {
-    const [colorBoard, setColor] = useState("white")
     const [startPoint, setStartPoint] = useState([1, 4])
     const [endPoint, setEndPoint] = useState([7, 2])
     const [height, setHeight] = useState(10)
     const [width, setWidth] = useState(10)
     const [walls, setWalls] = useState([])
-
-    const changeColor = () => {
-        setColor(prevState => prevState === "blue" ? "white" : "blue")
-    }
-
+    const [dijkstraPath, setPath] = useState<Map<string, null>>(new Map())
+    const [dijkstraVisited, setVisited] = useState<Map<string, number>>(new Map())
+    
 
     return (
         <div>
-            <Management setColor={changeColor} dijkstra={() => {
+            <Management  dijkstra={() => {
                 return startDijkstra({startPoint, endPoint, walls, height, width})
-            }}/>
-            <Board color={colorBoard} />
+            }} setPath={setPath} setVisited={setVisited}/>
+            <Board path={dijkstraPath} found={dijkstraVisited}/>
         </div>
     );
 }
@@ -60,10 +59,10 @@ const startDijkstra = async ({startPoint, endPoint, walls, height, width}: Dijks
 
 export interface DijkstraPromise {
     distance: number
-    distanceMap: {}
+    distanceMap: Map<string, number>
     end: number[]
     start: number[]
-
+    path: Map<string, null>
 }
 
 
